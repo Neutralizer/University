@@ -1,4 +1,4 @@
-package testDAO;
+package testJDBCDAO;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +12,9 @@ import dao.api.StudentDAO;
 import dao.impl.LectureDAOImpl;
 import dao.impl.ProfessorDAOImpl;
 import dao.impl.StudentDAOImpl;
+import daoJDBC.impl.LectureDAOImplJDBC;
+import daoJDBC.impl.ProfessorDAOImplJDBC;
+import daoJDBC.impl.StudentDAOImplJDBC;
 import entityAPI.Lecture.Lecture;
 import entityAPI.Lecture.LectureActionService;
 import entityAPI.professor.Professor;
@@ -25,14 +28,14 @@ import entityImpl.professor.ProfessorActionServiceImpl;
 import entityImpl.student.LectureNotFoundException;
 import entityImpl.student.StudentActionServiceImpl;
 
-public class TestDAO {
+public class JDBCSeparateTest {
 	//no longer needs access from DAO
 
-	ProfessorDAO profDAO = new ProfessorDAOImpl();
+	ProfessorDAOImplJDBC profDAO = new ProfessorDAOImplJDBC();
 
-	LectureDAO lecDAO = new LectureDAOImpl();
+	LectureDAOImplJDBC lecDAO = new LectureDAOImplJDBC();
 
-	StudentDAO studDAO = new StudentDAOImpl();
+	StudentDAOImplJDBC studDAO = new StudentDAOImplJDBC();
 
 	ProfessorActionService profService = new ProfessorActionServiceImpl();
 
@@ -43,30 +46,20 @@ public class TestDAO {
 	// works x
 	@Test
 	public void testDAO() {
+		// does not save the id
+		lecService.createLecture("Phys");
 
-		Lecture lec = lecService.createLecture("Phys");
+		lecService.createLecture("Phys1");
 
-		Lecture lec1 = lecService.createLecture("Phys1");
+		profService.createProfessor("Sharp");	
 
-		Professor professor = profService.createProfessor("Sharp");
+		profService.createProfessor("Keen");
 
-		Professor professor1 = profService.createProfessor("Keen");
+		studService.createStudent("Habib");
 
-		Student stud = studService.createStudent("Habib");
+		studService.createStudent("Fu Xi");
 
-		Student stud1 = studService.createStudent("Fu Xi");
-
-//		lecDAO.persist(lec);
-//
-//		lecDAO.persist(lec1);
-//
-//		profDAO.persist(professor);
-//
-//		profDAO.persist(professor1);
-//
-//		studDAO.persist(stud);
-//
-//		studDAO.persist(stud1);
+		
 
 	}
 
@@ -74,11 +67,14 @@ public class TestDAO {
 	@Test
 	public void testAddProf() {
 
-		Lecture lec1 = lecDAO.findById(1);
+//		Lecture lec1 = lecDAO.findById(1);
+		// test if lecture is not existent - ok
+		Lecture lec1 = lecService.findLectureById(2);
 
+		@SuppressWarnings("unused")
 		Professor professor1 = profService.createProfessor("Novost");
 
-		profDAO.persist(professor1);
+//		profDAO.persist(professor1);
 
 	}
 
@@ -103,30 +99,30 @@ public class TestDAO {
 
 		Student stud8 = studService.createStudent("Habib9");
 
-		Student stud9 = studService.createStudent("Fu Xi");
+		Student stud9 = studService.createStudent("Fu Xi10");
 
-		studDAO.persist(stud);
-
-		studDAO.persist(stud1);
-
-		studDAO.persist(stud2);
-
-		studDAO.persist(stud3);
-
-		studDAO.persist(stud4);
-
-		studDAO.persist(stud5);
-
-		studDAO.persist(stud6);
-
-		studDAO.persist(stud7);
-
-		studDAO.persist(stud8);
-
-		studDAO.persist(stud9);
 
 	}
 
+	// works x
+	@Test
+	public void testManyToManyStudToLectureMultiple() {
+
+		Lecture lec = lecDAO.findById(2);
+
+		Student stud4 = studDAO.findById(4);
+
+//		Student stud5 = studDAO.findById(5);
+//
+//		Student stud6 = studDAO.findById(6);
+//
+//		Student stud7 = studDAO.findById(7);
+
+//		studService.assignLecture(stud5, lec);
+//		studService.assignLecture(stud6, lec);
+//		studService.assignLecture(stud7, lec);
+
+	}
 
 	// works x
 	@Test
@@ -137,6 +133,8 @@ public class TestDAO {
 		Professor prof = profDAO.findById(1);
 
 		Lecture lecture = lecService.setLectureProfessor(lec1, prof);
+		
+		// check if null
 
 	}
 
@@ -173,6 +171,18 @@ public class TestDAO {
 
 	}
 
+	// works ,but reverse does not x
+	@Test
+	public void testManyToManyStudToLecture() {
+
+		Lecture lec = lecDAO.findById(2);
+
+		Student stud = studDAO.findById(1);
+
+
+		// studDAO.update(student);
+
+	}
 
 	//works x
 	@Test

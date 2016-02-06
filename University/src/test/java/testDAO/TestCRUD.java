@@ -47,9 +47,9 @@ public class TestCRUD {
 
 		Lecture lec2 = new LectureImpl("Phys2");
 
-		Professor professor1 = profService.createProfessor("Duduk", lec1);
+		Professor professor1 = profService.createProfessor("Sharp");
 
-		Professor professor2 = profService.createProfessor("Shebek", lec2);
+		Professor professor2 = profService.createProfessor("Keen");
 
 		Student stud1 = studService.createStudent("Habib");
 
@@ -72,8 +72,8 @@ public class TestCRUD {
 		assertEquals("Phys1", lecDAO.findById(1).getName());
 		assertEquals("Phys2", lecDAO.findById(2).getName());
 		
-		assertEquals("Duduk", profDAO.findById(1).getName());
-		assertEquals("Shebek", profDAO.findById(2).getName());
+		assertEquals("Sharp", profDAO.findById(1).getName());
+		assertEquals("Keen", profDAO.findById(2).getName());
 		
 		assertEquals("Habib", studDAO.findById(1).getName());
 		assertEquals("Fu Xi", studDAO.findById(2).getName());
@@ -81,19 +81,15 @@ public class TestCRUD {
 		
 		lecService.setLectureProfessor(lecDAO.findById(2), profDAO.findById(2));
 		
-		assertEquals("Shebek", lecDAO.findById(2).getLeadingProfessor().getName());
+		assertEquals("Keen", lecDAO.findById(2).getLeadingProfessor().getName());
 		
 		lecService.removeLectureProfessor(lecDAO.findById(2));
 		
 		assertNull(lecDAO.findById(2).getLeadingProfessor());
 		
 		// cascade for stud-lecture is set
-		studService.assignLecture(studDAO.findById(1), lecDAO.findById(1));
-		studService.assignLecture(studDAO.findById(2), lecDAO.findById(1));
-		
 		assertTrue(lecService.isStudentAttending(lecDAO.findById(1), studDAO.findById(2)));
 		
-		assertTrue(studService.isLectureAttended(studDAO.findById(1), lecDAO.findById(1)));
 		
 		//how many students are attending the lecture
 		assertEquals(2, lecDAO.findById(1).getAttendingStudents().size());
@@ -109,24 +105,7 @@ public class TestCRUD {
 //			assertFalse(true);
 //		}
 		
-		try {
-			studService.unassignLecture(studDAO.findById(2), lecDAO.findById(1));
-			assertFalse(lecService.isStudentAttending(lecDAO.findById(1), studDAO.findById(2)));
-			assertFalse(studService.isLectureAttended(studDAO.findById(2), lecDAO.findById(1)));
-		} catch (LectureNotFoundException e) {
-			assertFalse(true);
-		}
 		
-		//clear lecture from 
-		try {
-			studService.unassignLecture(studDAO.findById(1), lecDAO.findById(1));
-			assertFalse(lecService.isStudentAttending(lecDAO.findById(1), studDAO.findById(2)));
-			assertFalse(studService.isLectureAttended(studDAO.findById(2), lecDAO.findById(1)));
-		} catch (LectureNotFoundException e) {
-			assertFalse(true);
-		}
-		
-		Professor prof1 = profService.unassignLecture(profDAO.findById(1));
 		
 		//unassign stud
 		//unassign lec
@@ -147,7 +126,7 @@ public class TestCRUD {
 		assertNull(studDAO.findById(1));
 		
 		
-		
+		//student.getLectures
 		
 
 	}

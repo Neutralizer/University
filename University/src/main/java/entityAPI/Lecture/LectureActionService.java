@@ -1,5 +1,7 @@
 package entityAPI.Lecture;
 
+import java.util.Collection;
+
 import entityAPI.professor.Professor;
 import entityAPI.student.Student;
 import entityImpl.lecture.StudentNotFoundException;
@@ -21,6 +23,8 @@ public interface LectureActionService {
 	boolean isStudentAttending(Lecture lecture, Student student);
 
 	void removeLecture(Lecture lecture) throws LectureNotFoundException;
+	
+	Collection<Student> findAllLecturesStudents(Lecture lecture);
 
 	Lecture setLectureProfessor(Lecture lecture, Professor professor);
 

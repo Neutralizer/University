@@ -13,7 +13,5 @@ public interface StudentDAO {
 	
 	Student findById(int id);
 	
-	Collection<Lecture> getLectures(Student student);
-	
 	void kill(Student student);
 }

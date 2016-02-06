@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import dao.api.LectureDAO;
 import dao.impl.HibernateSessionManager;
 import dao.impl.LectureDAOImpl;
+import daoJDBC.impl.LectureDAOImplJDBC;
 import entityAPI.Lecture.Lecture;
 import entityAPI.Lecture.LectureActionService;
 import entityAPI.professor.Professor;
@@ -16,7 +17,8 @@ import entityImpl.student.LectureNotFoundException;
 
 public class LectureActionServiceImpl implements LectureActionService {
 
-	LectureDAO dao = new LectureDAOImpl();
+	LectureDAOImplJDBC dao = new LectureDAOImplJDBC();
+//	LectureDAOImpl dao = new LectureDAOImpl();
 	
 	public Lecture createLecture(String name) {
 		
@@ -48,11 +50,28 @@ public class LectureActionServiceImpl implements LectureActionService {
 
 		if (lecService.isStudentAttending(lecture, student)) {
 			Collection<Student> list = lecture.getAttendingStudents();
-			ArrayList arr = new ArrayList();
-			arr.addAll(list);
-			arr.remove(student.getId() - 1);
+			
+			
+			// get the id of the student to be removed and remove the object with
+			// the same id from the collection
+			
+			Iterator<Student> iter = list.iterator();
+//			int counter = 0;
+			while(iter.hasNext()){
+				if(iter.next().getId() == student.getId()){
+					iter.remove();
+//					list.remove(iter.next());
+					break;
+				}
+				
+//				counter++;
+				//remove here when found
+			}
+			
+			//
+//			list.remove();
 			Lecture lec = new LectureImpl(lecture.getId(), lecture.getName(),
-					lecture.getLeadingProfessor(), arr);
+					lecture.getLeadingProfessor(), list);
 			// lec.getAttendingStudents().remove(student);
 			dao.update(lec);
 			return lec;
@@ -76,16 +95,22 @@ public class LectureActionServiceImpl implements LectureActionService {
 	public void removeLecture(Lecture lecture) throws LectureNotFoundException {
 		dao.removeLecture(lecture);
 	}
+	
+	public Collection<Student> findAllLecturesStudents(Lecture lecture) {
+		return dao.getStudents(lecture);
+	}
 
 	public Lecture setLectureProfessor(Lecture lecture, Professor professor) {
-		Lecture lec = new LectureImpl(lecture.getId(), lecture.getName(), professor);
+		Lecture lec = new LectureImpl(lecture.getId(), lecture.getName(), 
+				professor, lecture.getAttendingStudents());
 		dao.update(lec);
 		return lec;
 
 	}
 
 	public Lecture removeLectureProfessor(Lecture lecture) {
-		Lecture lec = new LectureImpl(lecture.getId(), lecture.getName(), null);
+		Lecture lec = new LectureImpl(lecture.getId(), lecture.getName(),
+				null, lecture.getAttendingStudents());
 		dao.update(lec);
 		return lec;
 

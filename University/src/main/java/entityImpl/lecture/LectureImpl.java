@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -32,7 +34,12 @@ public class LectureImpl implements Lecture, Serializable {
 	String name;
 	@OneToOne (cascade = {CascadeType.ALL},targetEntity = ProfessorImpl.class)
 	Professor leadingProfessor;
-	@ManyToMany (mappedBy="attendedLectures",targetEntity = StudentImpl.class)
+	@ManyToMany 
+//	cascade = {CascadeType.ALL},
+	( targetEntity = StudentImpl.class)
+	@JoinTable(name="student_lecture", 
+			joinColumns={@JoinColumn(name="lecture_id")}, 
+			inverseJoinColumns={@JoinColumn(name="student_id")})
 	Collection<Student> attendingStudents = new ArrayList<Student>();
 
 	public LectureImpl() {
@@ -41,11 +48,22 @@ public class LectureImpl implements Lecture, Serializable {
 	public LectureImpl(String name) {
 		this.name = name;
 	}
+	
+	public LectureImpl(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public LectureImpl(int id, String name, Professor professor) {
 		this.id = id;
 		this.name = name;
 		this.leadingProfessor = professor;
+	}
+	
+	public LectureImpl(int id, String name, Collection<Student> attendingStudents) {
+		this.id = id;
+		this.name = name;
+		this.attendingStudents = attendingStudents;
 	}
 
 	public LectureImpl(int id, String name, Professor leadingProfessor,

@@ -2,6 +2,8 @@ package testServices;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
+
 import org.junit.Test;
 
 import entityAPI.Lecture.Lecture;
@@ -29,71 +31,76 @@ public class TestServices {
 	@Test
 	public void testStudentService() throws StudentNotFoundException, LectureNotFoundException, ProfessorNotFoundException {
 
-		Lecture lec1 = lecService.createLecture("Phys1");
+		lecService.createLecture("Phys1");
 
-		Lecture lec2 = lecService.createLecture("Phys2");
+		lecService.createLecture("Phys2");
 
-		Professor professor1 = profService.createProfessor("Duduk", lec1);
+		profService.createProfessor("Sharp");
 
-		Professor professor2 = profService.createProfessor("Shebek", lec2);
+		profService.createProfessor("Keen");
 
-		Student stud1 = studService.createStudent("Habib");
+		studService.createStudent("Habib");
 
-		Student stud2 = studService.createStudent("Fu Xi");
+		studService.createStudent("Fu Xi");
 
 		assertEquals("Phys1", lecService.findLectureById(1).getName());
 		assertEquals("Phys2", lecService.findLectureById(2).getName());
 
-		assertEquals("Duduk", profService.findProfessorById(1).getName());
-		assertEquals("Shebek", profService.findProfessorById(2).getName());
+		assertEquals("Sharp", profService.findProfessorById(1).getName());
+		assertEquals("Keen", profService.findProfessorById(2).getName());
 
 		assertEquals("Habib", studService.findStudentById(1).getName());
 		assertEquals("Fu Xi", studService.findStudentById(2).getName());
-
+		
 		lecService.setLectureProfessor(lecService.findLectureById(2),
 				profService.findProfessorById(2));
 
-		assertEquals("Shebek",
+		assertEquals("Keen",
 				lecService.findLectureById(2).getLeadingProfessor().getName());
-
+		
 		lecService.removeLectureProfessor(lecService.findLectureById(2));
-
+		
 		assertNull(lecService.findLectureById(2).getLeadingProfessor());
+		
+		
+		
+		
+		
+		
+		
+		
 
 		// cascade for stud-lecture is set
-		studService.assignLecture(studService.findStudentById(1),
-				lecService.findLectureById(1));
-		studService.assignLecture(studService.findStudentById(2),
-				lecService.findLectureById(1));
+		// //student 1 - lecture 1
+		// //student 2 - lecture 1
+		lecService.assignStudent(lecService.findLectureById(1),
+				studService.findStudentById(1));
+		
+		lecService.assignStudent(lecService.findLectureById(1),
+				studService.findStudentById(2));
+		
+		
+		
+		// // 2 asserts
+		assertTrue(lecService.isStudentAttending(lecService.findLectureById(1),
+				studService.findStudentById(1)));
 
 		assertTrue(lecService.isStudentAttending(lecService.findLectureById(1),
 				studService.findStudentById(2)));
 
-		assertTrue(studService.isLectureAttended(studService.findStudentById(1),
-				lecService.findLectureById(1)));
-
-		// how many students are attending the lecture
+		// how many students are attending the lecture 1
 		assertEquals(2, lecService.findLectureById(1).getAttendingStudents().size());
 		
-		try {
-			studService.unassignLecture(studService.findStudentById(2), lecService.findLectureById(1));
-			assertFalse(lecService.isStudentAttending(lecService.findLectureById(1), studService.findStudentById(2)));
-			assertFalse(studService.isLectureAttended(studService.findStudentById(2), lecService.findLectureById(1)));
-		} catch (LectureNotFoundException e) {
-			assertFalse(true);
-		}
+		// how many students are attending the lecture from action service
 		
-		//clear lecture from 
-		try {
-			studService.unassignLecture(studService.findStudentById(1), lecService.findLectureById(1));
-			assertFalse(lecService.isStudentAttending(lecService.findLectureById(1), studService.findStudentById(2)));
-			assertFalse(studService.isLectureAttended(studService.findStudentById(2), lecService.findLectureById(1)));
-		} catch (LectureNotFoundException e) {
-			assertFalse(true);
-		}
+		assertEquals(lecService.findLectureById(1).getAttendingStudents().size(), 
+				lecService.findAllLecturesStudents(lecService.findLectureById(1)).size());
 		
-		Professor prof1 = profService.unassignLecture(profService.findProfessorById(1));
+		lecService.setLectureProfessor(lecService.findLectureById(2),
+				profService.findProfessorById(2));
 		
+		
+		// // remove lecture from professor
 		//unassign stud
 		//unassign lec
 		
@@ -102,6 +109,14 @@ public class TestServices {
 		assertNull(profService.findProfessorById(1));
 		
 		// remove all professors and students, associated with the lecture
+		
+		// if there is a lecture reference in the intermediary table 
+		// the lecture will not be removed
+		lecService.unassignStudent(lecService.findLectureById(1), 
+				studService.findStudentById(1));
+		
+		lecService.unassignStudent(lecService.findLectureById(1), 
+				studService.findStudentById(2));
 		
 		lecService.removeLecture(lecService.findLectureById(1));
 		

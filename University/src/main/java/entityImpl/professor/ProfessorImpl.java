@@ -25,9 +25,6 @@ public class ProfessorImpl implements Professor, Serializable {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	int id;
 	String name;
-	@OneToOne (targetEntity = LectureImpl.class)
-//	@JoinColumn(name="professor_s lecture")
-	Lecture lecture;
 
 	public ProfessorImpl() {
 	}
@@ -37,11 +34,10 @@ public class ProfessorImpl implements Professor, Serializable {
 		this.name = name;
 	}
 
-	public ProfessorImpl(String name, Lecture lecture) {
+	public ProfessorImpl(String name) {
 		this.name = name;
-		this.lecture = lecture;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -50,8 +46,5 @@ public class ProfessorImpl implements Professor, Serializable {
 		return name;
 	}
 
-	public Lecture getLecture() {
-		return lecture;
-	}
 
 }

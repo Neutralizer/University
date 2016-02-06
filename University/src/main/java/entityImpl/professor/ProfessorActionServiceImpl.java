@@ -2,16 +2,18 @@ package entityImpl.professor;
 
 import dao.api.ProfessorDAO;
 import dao.impl.ProfessorDAOImpl;
+import daoJDBC.impl.ProfessorDAOImplJDBC;
 import entityAPI.Lecture.Lecture;
 import entityAPI.professor.Professor;
 import entityAPI.professor.ProfessorActionService;
 
 public class ProfessorActionServiceImpl implements ProfessorActionService {
 
-	ProfessorDAO dao = new ProfessorDAOImpl();
-
-	public Professor createProfessor(String name, Lecture lecture) {
-		Professor prof = new ProfessorImpl(name, lecture);
+	ProfessorDAOImplJDBC dao = new ProfessorDAOImplJDBC();
+//	ProfessorDAOImpl dao = new ProfessorDAOImpl();
+	
+	public Professor createProfessor(String name) {
+		Professor prof = new ProfessorImpl(name);
 		dao.persist(prof);
 		return prof;
 	}
@@ -28,12 +30,6 @@ public class ProfessorActionServiceImpl implements ProfessorActionService {
 	public void killProfessor(Professor professor) throws ProfessorNotFoundException {
 		dao.kill(professor);
 
-	}
-
-	public Professor unassignLecture(Professor professor) {
-		Professor prof = new ProfessorImpl(professor.getId(), professor.getName());
-		dao.update(prof);
-		return prof;
 	}
 
 	

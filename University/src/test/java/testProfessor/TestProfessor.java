@@ -18,11 +18,10 @@ public class TestProfessor {
 		
 		ProfessorActionService profService = getProfessorActionService();
 		
-		Professor prof = profService.createProfessor("Albert San", lec);
+		Professor prof = profService.createProfessor("Albert San");
 		
 		assertEquals("Albert San", prof.getName());
 		
-		assertEquals(lec, prof.getLecture());
 		
 
 	}

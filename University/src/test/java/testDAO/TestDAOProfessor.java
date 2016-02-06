@@ -29,11 +29,11 @@ public class TestDAOProfessor {
 
 		Lecture lec = new LectureImpl("Phys");
 
-		Professor professor = profService.createProfessor("Duduk", lec);
+		Professor professor = profService.createProfessor("Sharp");
 
 		Lecture lec1 = new LectureImpl("Phys1");
 
-		Professor professor1 = profService.createProfessor("Shebek", lec);
+		Professor professor1 = profService.createProfessor("Keen");
 
 		lecDAO.persist(lec);
 

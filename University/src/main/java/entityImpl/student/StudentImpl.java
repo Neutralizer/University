@@ -30,26 +30,20 @@ public class StudentImpl implements Student, Serializable {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	int id;
 	String name;
-	@ManyToMany 
-	(cascade = {CascadeType.ALL}, targetEntity = LectureImpl.class)
-	@JoinTable(name="student_lecture", 
-			joinColumns={@JoinColumn(name="student_id")}, 
-			inverseJoinColumns={@JoinColumn(name="lecture_id")})
-	Collection<Lecture> attendedLectures = new ArrayList<Lecture>();
 
 	public StudentImpl() {
 	}
-
+	
 	public StudentImpl(String name) {
 		this.name = name;
 	}
-
-	public StudentImpl(int id, String name, Collection<Lecture> attendedLectures) {
+	
+	public StudentImpl(int id, String name) {
 		this.id = id;
 		this.name = name;
-		this.attendedLectures = attendedLectures;
 	}
 
+	
 	public int getId() {
 		return id;
 	}
@@ -58,8 +52,5 @@ public class StudentImpl implements Student, Serializable {
 		return name;
 	}
 
-	public Collection<Lecture> getAttendedLectures() {
-		return attendedLectures;
-	}
 
 }

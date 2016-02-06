@@ -37,19 +37,12 @@ public class TestStudent {
 
 		Lecture lec = new LectureImpl("dummyLec");
 
-		Student stud1 = studService.assignLecture(stud, lec);
 
-		assertEquals(lec, stud.getAttendedLectures().iterator().next());
 
-		assertNotEquals(stud, stud1);
 		
-		boolean flag = studService.isLectureAttended(stud1, lec);
 		
-		assertTrue(flag);
 
-		Student stud2 = studService.unassignLecture(stud, lec);
 
-		assertEquals(0, stud2.getAttendedLectures().size());
 
 	}
 
@@ -62,7 +55,6 @@ public class TestStudent {
 
 		Lecture lec = new LectureImpl("dummyLec");
 		
-		Student stud1 = studService.unassignLecture(stud, lec);
 	}
 
 	private StudentActionService getStudentActionServiceImpl() {

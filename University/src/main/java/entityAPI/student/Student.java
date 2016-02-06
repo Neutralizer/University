@@ -7,10 +7,7 @@ import entityAPI.Lecture.Lecture;
 public interface Student {
 
 	int getId();
-	
+
 	String getName();
-	
-	Collection<Lecture> getAttendedLectures();
-	
-	
+
 }

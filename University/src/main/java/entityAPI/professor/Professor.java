@@ -4,9 +4,8 @@ import entityAPI.Lecture.Lecture;
 
 public interface Professor {
 
-	 int getId();
-	 
-	 String getName();
-	 
-	 Lecture getLecture();
+	int getId();
+
+	String getName();
+
 }

@@ -1,5 +1,8 @@
 package dao.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -48,6 +51,14 @@ public class LectureDAOImpl implements LectureDAO {
 
 		return lec;
 	}
+	
+	public Collection<Student> getStudents(Lecture lecture) {
+		Session session = HibernateSessionManager.openCurrentSessionwithTransaction();
+		List<Student> stud = null;
+		Lecture lec = session.get(LectureImpl.class, lecture.getId());
+		stud = (List<Student>) lec.getAttendingStudents();
+		return stud;
+	}
 
 
 	public void removeLecture(Lecture lecture) {
@@ -66,6 +77,8 @@ public class LectureDAOImpl implements LectureDAO {
 			HibernateSessionManager.shutdown();
 		}
 	}
+
+
 
 	
 
